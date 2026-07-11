@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invicta Filmes — Produção Audiovisual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/index.css">
 </head>
@@ -11,7 +13,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">INVICTA<span>.</span></a>
+  <a href="#" class="nav-logo"><img src="assets/invicta-logo.png" alt="Invicta Filmes"></a>
   <ul class="nav-links">
     <li><a href="#portfolio">Portfólio</a></li>
     <li><a href="catalogo.html">Produções</a></li>
@@ -19,14 +21,26 @@
     <li><a href="#sobre">Sobre</a></li>
   </ul>
   <a href="#contato" class="nav-cta">Falar com a gente</a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#portfolio">Portfólio</a>
+  <a href="catalogo.html">Produções</a>
+  <a href="#servicos">Serviços</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#contato" class="mobile-menu-cta">Falar com a gente</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <span class="hero-line">Produção audiovisual — Fortaleza, CE</span>
-  <h1>INVICTA<br><em>FILMES</em></h1>
-  <p class="hero-sub">Do conceito à entrega final — clipes, campanhas, documentários e conteúdo com padrão cinematográfico.</p>
+  <span class="hero-line" id="hero-line">Produção audiovisual — Fortaleza, CE</span>
+  <h1><img src="assets/invicta-logo.png" alt="Invicta Filmes" class="hero-logo"></h1>
+  <p class="hero-sub" id="hero-sub">Do conceito à entrega final — clipes, campanhas, documentários e conteúdo com padrão cinematográfico.</p>
   <div class="hero-btns">
     <a href="#portfolio" class="btn-primary">Ver portfólio</a>
     <a href="#contato" class="btn-ghost">Solicitar orçamento</a>
@@ -104,9 +118,9 @@
   <div class="about-text">
     <span class="sec-label">Sobre a produtora</span>
     <h2 class="sec-title">FEITA PRA<br>CONTAR O<br>QUE IMPORTA</h2>
-    <p>A Invicta Filmes nasce da crença de que toda marca, todo artista e toda ideia tem uma história que merece ser contada com cuidado e com padrão.</p>
-    <p>Trabalhamos com direção criativa, captação e pós-produção para entregar projetos que emocionam e geram resultado — do palco ao digital.</p>
-    <div class="about-stats">
+    <p id="about-p1">A Invicta Filmes nasce da crença de que toda marca, todo artista e toda ideia tem uma história que merece ser contada com cuidado e com padrão.</p>
+    <p id="about-p2">Trabalhamos com direção criativa, captação e pós-produção para entregar projetos que emocionam e geram resultado — do palco ao digital.</p>
+    <div class="about-stats" id="about-stats">
       <div><div class="stat-num">80+</div><div class="stat-lbl">Projetos</div></div>
       <div><div class="stat-num">5</div><div class="stat-lbl">Anos</div></div>
       <div><div class="stat-num">100%</div><div class="stat-lbl">Dedicação</div></div>
@@ -121,41 +135,29 @@
 <section class="contact-section" id="contato">
   <span class="sec-label">Vamos trabalhar juntos</span>
   <h2 class="contact-title">TEM UM<br>PROJETO<br>EM <em>MENTE?</em></h2>
-  <p class="contact-sub">Fale com a gente e vamos transformar a sua ideia em audiovisual de impacto.</p>
+  <p class="contact-sub" id="contact-sub">Fale com a gente e vamos transformar a sua ideia em audiovisual de impacto.</p>
   <div class="contact-btns">
-    <a href="mailto:contato@invictafilmes.com" class="btn-primary">E-mail</a>
-    <a href="https://wa.me/5585999999999" class="btn-ghost" target="_blank">WhatsApp</a>
-    <a href="https://instagram.com/invictafilmes" class="btn-ghost" target="_blank">Instagram</a>
+    <a href="mailto:contato@invictafilmes.com" class="btn-primary" id="contact-email">E-mail</a>
+    <a href="https://wa.me/5585999999999" class="btn-ghost" target="_blank" rel="noopener" id="contact-whatsapp">WhatsApp</a>
+    <a href="https://instagram.com/invictafilmes" class="btn-ghost" target="_blank" rel="noopener" id="contact-instagram">Instagram</a>
   </div>
 </section>
 
 <footer>
   <span class="footer-logo">INVICTA FILMES</span>
-  <span class="footer-copy">© 2025 — Todos os direitos reservados</span>
+  <span class="footer-copy">© <span id="year">2026</span> — Todos os direitos reservados</span>
 </footer>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLb(event)">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Player de vídeo">
   <div class="lb-inner">
-    <button class="lb-close" onclick="closeLb()">✕</button>
-    <iframe id="lb-frame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <button class="lb-close" id="lb-close" aria-label="Fechar vídeo">✕</button>
+    <iframe id="lb-frame" title="Player de vídeo do YouTube" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
   <div class="lb-label" id="lb-label"></div>
 </div>
 
-<!-- FAB -->
-<button class="fab" onclick="toggleEdit()">✎ Editar vídeos</button>
-
-<!-- EDIT PANEL -->
-<div class="edit-panel" id="edit-panel">
-  <h3>Configurar portfólio</h3>
-  <div id="edit-fields"></div>
-  <div class="edit-actions">
-    <button class="btn-save" onclick="saveVideos()">Salvar</button>
-    <button class="btn-cancel" onclick="toggleEdit()">Cancelar</button>
-  </div>
-</div>
-
+<script src="js/supabase-config.js"></script>
 <script src="js/index.js"></script>
 </body>
 </html>

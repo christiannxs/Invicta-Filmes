@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Produções — Invicta Filmes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/catalogo.css">
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">INVICTA<span>.</span></a>
+  <a href="index.html" class="nav-logo"><img src="assets/invicta-logo.png" alt="Invicta Filmes"></a>
   <a href="index.html" class="nav-back">← Voltar</a>
 </nav>
 
@@ -38,27 +40,15 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLb(event)">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Player de vídeo">
   <div class="lb-inner">
-    <button class="lb-close" onclick="closeLb()">✕</button>
-    <iframe id="lb-frame" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <button class="lb-close" id="lb-close" aria-label="Fechar vídeo">✕</button>
+    <iframe id="lb-frame" title="Player de vídeo do YouTube" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
   <div class="lb-label" id="lb-label"></div>
 </div>
 
-<button class="fab" onclick="toggleEdit()">✎ Editar catálogo</button>
-
-<div class="edit-panel" id="edit-panel">
-  <h3>Gerenciar produções</h3>
-  <p style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem;">Cole o ID do YouTube (parte após ?v= na URL)</p>
-  <div id="ep-items"></div>
-  <button class="ep-add" onclick="addItem()">+ Adicionar produção</button>
-  <div class="edit-actions">
-    <button class="btn-save" onclick="saveAll()">Salvar</button>
-    <button class="btn-cancel" onclick="toggleEdit()">Cancelar</button>
-  </div>
-</div>
-
+<script src="js/supabase-config.js"></script>
 <script src="js/catalogo.js"></script>
 </body>
 </html>
