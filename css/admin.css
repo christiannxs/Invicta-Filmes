@@ -9,6 +9,7 @@
   --font-body: 'Inter', sans-serif;
 }
 body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; }
+[hidden] { display: none !important; }
 
 .btn-primary {
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;

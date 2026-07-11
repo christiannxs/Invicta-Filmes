@@ -1,4 +1,9 @@
 /* Painel de administração — Invicta Filmes */
+if (typeof supabase === 'undefined') {
+  document.getElementById('login-error').textContent =
+    'Não foi possível carregar a biblioteca de login. Desative bloqueadores de anúncio para esta página e recarregue.';
+  throw new Error('supabase-js não carregou (CDN bloqueado?)');
+}
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const CATS = ['Clipe musical','DVD / Show','Institucional','Documentário','Publicitário','Social media'];
