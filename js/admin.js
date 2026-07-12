@@ -38,6 +38,7 @@ const TEXT_SECTIONS = [
     { key: 'about_p1',     label: 'Parágrafo 1', type: 'textarea', full: true },
     { key: 'about_p2',     label: 'Parágrafo 2', type: 'textarea', full: true },
     { key: 'about_visual', label: 'Texto do quadro ao lado ("INVICTA FILMES / EST. 2019")', type: 'textarea', full: true },
+    { key: 'about_watermark', label: 'Palavra gigante ao fundo do quadro' },
   ]},
   { title: 'Contato', fields: [
     { key: 'contact_label',     label: 'Etiqueta da seção' },
@@ -62,7 +63,7 @@ const LINE_KEYS = ['marquee_items']; // campos "um item por linha" salvos como l
 /* Aparência */
 const DEFAULT_THEME = { accent: '#0737e8', accent_light: '#4d70ff', accent_hover: '#2a55ff', bg: '#000000', text: '#ededed' };
 const DEFAULT_LOGO = 'assets/invicta-logo.png';
-let appearance = { theme: { ...DEFAULT_THEME }, site_title: '', favicon_url: '', logo_url: '', hero_media: { type: 'logo', url: '' } };
+let appearance = { theme: { ...DEFAULT_THEME }, site_title: '', favicon_url: '', logo_url: '', hero_media: { type: 'logo', url: '' }, about_media: { type: 'text', url: '' } };
 
 let videos = [];
 let deletedVideoIds = [];
@@ -420,6 +421,7 @@ function fillAppearance(map) {
   appearance.favicon_url = typeof map.favicon_url === 'string' ? map.favicon_url : '';
   appearance.logo_url = typeof map.logo_url === 'string' ? map.logo_url : '';
   if (map.hero_media && typeof map.hero_media === 'object') appearance.hero_media = { type: 'logo', url: '', ...map.hero_media };
+  if (map.about_media && typeof map.about_media === 'object') appearance.about_media = { type: 'text', url: '', ...map.about_media };
 
   document.getElementById('ap-site-title').value = appearance.site_title;
   AP_COLORS.forEach(k => {
@@ -430,7 +432,9 @@ function fillAppearance(map) {
   document.getElementById('ap-logo-preview').src = appearance.logo_url || DEFAULT_LOGO;
   document.getElementById('ap-favicon-preview').src = appearance.favicon_url || DEFAULT_LOGO;
   document.querySelector(`[name="hero-media"][value="${appearance.hero_media.type === 'image' ? 'image' : 'logo'}"]`).checked = true;
+  document.querySelector(`[name="about-media"][value="${appearance.about_media.type === 'image' ? 'image' : 'text'}"]`).checked = true;
   updateHeroUploadVisibility();
+  updateAboutUploadVisibility();
 }
 
 function updateHeroUploadVisibility() {
@@ -439,6 +443,14 @@ function updateHeroUploadVisibility() {
   const prev = document.getElementById('ap-hero-preview');
   prev.src = appearance.hero_media.url || '';
   prev.style.display = appearance.hero_media.url ? '' : 'none';
+}
+
+function updateAboutUploadVisibility() {
+  const isImage = document.querySelector('[name="about-media"]:checked')?.value === 'image';
+  document.getElementById('ap-about-upload').hidden = !isImage;
+  const prev = document.getElementById('ap-about-preview');
+  prev.src = appearance.about_media.url || '';
+  prev.style.display = appearance.about_media.url ? '' : 'none';
 }
 
 // Sincroniza o seletor de cor com o campo de texto hex
@@ -501,6 +513,10 @@ bindUpload('ap-hero-file', 'hero', url => {
   appearance.hero_media.url = url;
   updateHeroUploadVisibility();
 });
+bindUpload('ap-about-file', 'sobre', url => {
+  appearance.about_media.url = url;
+  updateAboutUploadVisibility();
+});
 
 document.getElementById('ap-logo-clear').addEventListener('click', () => {
   appearance.logo_url = '';
@@ -512,6 +528,8 @@ document.getElementById('ap-favicon-clear').addEventListener('click', () => {
 });
 document.querySelectorAll('[name="hero-media"]').forEach(r =>
   r.addEventListener('change', updateHeroUploadVisibility));
+document.querySelectorAll('[name="about-media"]').forEach(r =>
+  r.addEventListener('change', updateAboutUploadVisibility));
 
 document.getElementById('save-appearance').addEventListener('click', async () => {
   const btn = document.getElementById('save-appearance');
@@ -529,12 +547,16 @@ document.getElementById('save-appearance').addEventListener('click', async () =>
     const heroType = document.querySelector('[name="hero-media"]:checked')?.value === 'image' ? 'image' : 'logo';
     if (heroType === 'image' && !appearance.hero_media.url)
       throw new Error('envie uma foto para o hero ou volte para a opção "Mostrar a logo"');
+    const aboutType = document.querySelector('[name="about-media"]:checked')?.value === 'image' ? 'image' : 'text';
+    if (aboutType === 'image' && !appearance.about_media.url)
+      throw new Error('envie uma foto para o quadro "Sobre" ou volte para a opção "Mostrar texto"');
     const rows = [
       { key: 'theme', value: theme },
       { key: 'site_title', value: document.getElementById('ap-site-title').value.trim() },
       { key: 'favicon_url', value: appearance.favicon_url },
       { key: 'logo_url', value: appearance.logo_url },
       { key: 'hero_media', value: { type: heroType, url: appearance.hero_media.url } },
+      { key: 'about_media', value: { type: aboutType, url: appearance.about_media.url } },
     ];
     const { error } = await sb.from('site_settings').upsert(rows);
     if (error) throw error;

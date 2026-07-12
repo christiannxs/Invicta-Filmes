@@ -373,12 +373,16 @@ nav {
   border: 1px solid var(--border); position: relative; overflow: hidden;
 }
 .about-visual::before {
-  content: 'INVICTA';
+  content: var(--about-watermark, 'INVICTA');
   font-family: var(--font-display);
   font-size: 5rem; letter-spacing: 0.6em;
   color: rgba(255,255,255,0.04);
   position: absolute;
 }
+/* Quando o admin escolhe uma foto para o quadro do "Sobre" */
+.about-visual.has-photo { background-size: cover; background-position: center; }
+.about-visual.has-photo::before { content: none; }
+.about-visual.has-photo .about-visual-inner { display: none; }
 .about-visual-inner {
   text-align: center; z-index: 1;
   font-family: var(--font-display); letter-spacing: 0.08em;

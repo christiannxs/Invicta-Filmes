@@ -83,10 +83,24 @@ function applyHeroMedia(s){
   }
 }
 
+// Quadro visual da seção "Sobre": foto enviada no admin ou texto + marca d'água
+function applyAboutVisual(s){
+  const box = document.getElementById('about-visual');
+  const am = s.about_media || {};
+  if (am.type === 'image' && am.url){
+    box.classList.add('has-photo');
+    box.style.backgroundImage = `url("${String(am.url).replace(/"/g,'%22')}")`;
+  }
+  if (typeof s.about_watermark === 'string' && s.about_watermark){
+    box.style.setProperty('--about-watermark', `'${s.about_watermark.replace(/'/g,'')}'`);
+  }
+}
+
 function applySettings(s){
   applyBranding(s);   // cores, título da aba, favicon, logo da nav
   applyTexts(s);      // todos os elementos [data-s]
   applyHeroMedia(s);
+  applyAboutVisual(s);
   renderServices(s.services);
   if (Array.isArray(s.marquee_items) && s.marquee_items.length) renderMarquee(s.marquee_items);
   if (Array.isArray(s.stats) && s.stats.length){

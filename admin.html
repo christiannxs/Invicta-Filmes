@@ -136,6 +136,21 @@
       </div>
     </div>
 
+    <div class="ap-card">
+      <h3 class="ap-title">Quadro da seção "Sobre"</h3>
+      <label class="ap-radio"><input type="radio" name="about-media" value="text"> Mostrar texto (editável na aba Textos)</label>
+      <label class="ap-radio"><input type="radio" name="about-media" value="image"> Mostrar uma foto</label>
+      <div class="ap-upload" id="ap-about-upload" hidden>
+        <div class="ap-upload-row">
+          <img id="ap-about-preview" class="ap-preview wide" alt="Prévia da foto do quadro Sobre">
+          <div class="ap-upload-actions">
+            <input type="file" id="ap-about-file" accept="image/png,image/jpeg,image/webp" hidden>
+            <button class="btn-ghost-sm" data-file="ap-about-file">Enviar foto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="save-bar">
       <span class="save-status" id="appearance-status"></span>
       <button class="btn-primary" id="save-appearance">Salvar aparência</button>
