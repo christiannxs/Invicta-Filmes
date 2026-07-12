@@ -432,9 +432,8 @@ function fillAppearance(map) {
   document.getElementById('ap-logo-preview').src = appearance.logo_url || DEFAULT_LOGO;
   document.getElementById('ap-favicon-preview').src = appearance.favicon_url || DEFAULT_LOGO;
   document.querySelector(`[name="hero-media"][value="${appearance.hero_media.type === 'image' ? 'image' : 'logo'}"]`).checked = true;
-  document.querySelector(`[name="about-media"][value="${appearance.about_media.type === 'image' ? 'image' : 'text'}"]`).checked = true;
   updateHeroUploadVisibility();
-  updateAboutUploadVisibility();
+  updateAboutPreview();
 }
 
 function updateHeroUploadVisibility() {
@@ -445,9 +444,7 @@ function updateHeroUploadVisibility() {
   prev.style.display = appearance.hero_media.url ? '' : 'none';
 }
 
-function updateAboutUploadVisibility() {
-  const isImage = document.querySelector('[name="about-media"]:checked')?.value === 'image';
-  document.getElementById('ap-about-upload').hidden = !isImage;
+function updateAboutPreview() {
   const prev = document.getElementById('ap-about-preview');
   prev.src = appearance.about_media.url || '';
   prev.style.display = appearance.about_media.url ? '' : 'none';
@@ -515,7 +512,7 @@ bindUpload('ap-hero-file', 'hero', url => {
 });
 bindUpload('ap-about-file', 'sobre', url => {
   appearance.about_media.url = url;
-  updateAboutUploadVisibility();
+  updateAboutPreview();
 });
 
 document.getElementById('ap-logo-clear').addEventListener('click', () => {
@@ -528,8 +525,6 @@ document.getElementById('ap-favicon-clear').addEventListener('click', () => {
 });
 document.querySelectorAll('[name="hero-media"]').forEach(r =>
   r.addEventListener('change', updateHeroUploadVisibility));
-document.querySelectorAll('[name="about-media"]').forEach(r =>
-  r.addEventListener('change', updateAboutUploadVisibility));
 
 document.getElementById('save-appearance').addEventListener('click', async () => {
   const btn = document.getElementById('save-appearance');
@@ -547,9 +542,8 @@ document.getElementById('save-appearance').addEventListener('click', async () =>
     const heroType = document.querySelector('[name="hero-media"]:checked')?.value === 'image' ? 'image' : 'logo';
     if (heroType === 'image' && !appearance.hero_media.url)
       throw new Error('envie uma foto para o hero ou volte para a opção "Mostrar a logo"');
-    const aboutType = document.querySelector('[name="about-media"]:checked')?.value === 'image' ? 'image' : 'text';
-    if (aboutType === 'image' && !appearance.about_media.url)
-      throw new Error('envie uma foto para o quadro "Sobre" ou volte para a opção "Mostrar texto"');
+    // O quadro "Sobre" mostra a foto sempre que houver uma; sem foto, cai no texto
+    const aboutType = appearance.about_media.url ? 'image' : 'text';
     const rows = [
       { key: 'theme', value: theme },
       { key: 'site_title', value: document.getElementById('ap-site-title').value.trim() },
