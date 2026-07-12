@@ -1,13 +1,13 @@
 // Catálogo — conteúdo carregado do Supabase, com fallback local se estiver offline.
 const FALLBACK = [
-  { id:'lhCQxreLeAw', title:'PROJETO 01', artist:'Artista A', cat:'Clipe musical', dur:'3:37', desc:'Clipe oficial gravado ao vivo.' },
-  { id:'mpiX5Szs-Xs', title:'PROJETO 02', artist:'Artista B', cat:'DVD / Show', dur:'2:30', desc:'Faixa do DVD ao vivo.' },
-  { id:'XGpuOYFEHe4', title:'PROJETO 03', artist:'Artista C', cat:'Clipe musical', dur:'2:42', desc:'Clipe oficial de lançamento.' },
-  { id:'X82BOrgMeos', title:'PROJETO 04', artist:'Artista D', cat:'Clipe musical', dur:'4:52', desc:'Produção audiovisual com direção criativa completa.' },
-  { id:'-6J3HfX4sbg', title:'PROJETO 05', artist:'Artista E', cat:'DVD / Show', dur:'4:03', desc:'Faixa do DVD ao vivo gravado em Fortaleza.' },
-  { id:'N62whNs7CqQ', title:'PROJETO 06', artist:'Artista F', cat:'Clipe musical', dur:'3:22', desc:'Clipe oficial.' },
-  { id:'P_kzO3v7ixY', title:'PROJETO 07', artist:'Artista G', cat:'Documentário', dur:'3:33', desc:'Clipe documental com fotografia do interior.' },
-  { id:'h_2Gk89is-o', title:'PROJETO 08', artist:'Artista H', cat:'Clipe musical', dur:'3:41', desc:'Clipe oficial de lançamento.' },
+  { id:'lhCQxreLeAw', title:'PROJETO 01', artist:'Artista A', cat:'Clipe musical', desc:'Clipe oficial gravado ao vivo.' },
+  { id:'mpiX5Szs-Xs', title:'PROJETO 02', artist:'Artista B', cat:'DVD / Show', desc:'Faixa do DVD ao vivo.' },
+  { id:'XGpuOYFEHe4', title:'PROJETO 03', artist:'Artista C', cat:'Clipe musical', desc:'Clipe oficial de lançamento.' },
+  { id:'X82BOrgMeos', title:'PROJETO 04', artist:'Artista D', cat:'Clipe musical', desc:'Produção audiovisual com direção criativa completa.' },
+  { id:'-6J3HfX4sbg', title:'PROJETO 05', artist:'Artista E', cat:'DVD / Show', desc:'Faixa do DVD ao vivo gravado em Fortaleza.' },
+  { id:'N62whNs7CqQ', title:'PROJETO 06', artist:'Artista F', cat:'Clipe musical', desc:'Clipe oficial.' },
+  { id:'P_kzO3v7ixY', title:'PROJETO 07', artist:'Artista G', cat:'Documentário', desc:'Clipe documental com fotografia do interior.' },
+  { id:'h_2Gk89is-o', title:'PROJETO 08', artist:'Artista H', cat:'Clipe musical', desc:'Clipe oficial de lançamento.' },
 ];
 
 let videos = [];
@@ -33,7 +33,6 @@ function renderGrid() {
     <div class="video-card" role="button" tabindex="0" data-i="${i}" aria-label="Assistir ${esc(v.title)}">
       <div class="card-thumb">
         <img src="${thumb(v.id)}" onerror="this.src='${thumbFb(v.id)}'" alt="${esc(v.title)}" loading="lazy">
-        ${v.dur ? `<div class="card-duration">${esc(v.dur)}</div>` : ''}
         <div class="play-btn">
           <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="30"/><polygon points="23,18 45,30 23,42"/></svg>
         </div>
@@ -67,9 +66,9 @@ function filter(btn) {
 // Carrega do Supabase (fallback local)
 (async function init() {
   try {
-    const rows = await sbFetch('videos?select=youtube_id,title,artist,category,duration,description&order=sort_order.asc');
+    const rows = await sbFetch('videos?select=youtube_id,title,artist,category,description&order=sort_order.asc');
     videos = rows.length
-      ? rows.map(r => ({ id:r.youtube_id, title:r.title, artist:r.artist, cat:r.category, dur:r.duration, desc:r.description }))
+      ? rows.map(r => ({ id:r.youtube_id, title:r.title, artist:r.artist, cat:r.category, desc:r.description }))
       : FALLBACK;
   } catch (err) {
     videos = FALLBACK;

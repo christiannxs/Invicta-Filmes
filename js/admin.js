@@ -104,7 +104,6 @@ function renderVideos() {
         <div><label>Categoria</label>
           <select data-f="category">${CATS.map(c => `<option>${c}</option>`).join('')}</select>
         </div>
-        <div><label>Duração (ex: 3:42)</label><input data-f="duration"></div>
         <div class="full"><label>Descrição curta</label><input data-f="description"></div>
       </div>
       <div class="vr-side">
@@ -153,7 +152,7 @@ function renderVideos() {
 }
 
 document.getElementById('add-video').addEventListener('click', () => {
-  videos.unshift({ youtube_id: '', title: '', artist: '', category: CATS[0], duration: '', description: '', show_on_home: false });
+  videos.unshift({ youtube_id: '', title: '', artist: '', category: CATS[0], description: '', show_on_home: false });
   renderVideos();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
@@ -169,7 +168,6 @@ document.getElementById('save-videos').addEventListener('click', async () => {
       title: (v.title || '').trim() || 'SEM TÍTULO',
       artist: (v.artist || '').trim() || null,
       category: v.category || CATS[0],
-      duration: (v.duration || '').trim() || null,
       description: (v.description || '').trim() || null,
       show_on_home: !!v.show_on_home,
       sort_order: i + 1,
