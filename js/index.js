@@ -56,9 +56,11 @@ function renderMosaic(videos){
   });
 }
 
-function renderClients(names){
+function renderClients(list){
   const g = document.getElementById('clients-grid');
-  g.innerHTML = names.map(c=>`<div class="client-pill">${esc(c)}</div>`).join('');
+  g.innerHTML = list.map(c => c.logo
+    ? `<div class="client-pill has-logo"><img src="${esc(c.logo)}" alt="${esc(c.name)}" title="${esc(c.name)}" loading="lazy"></div>`
+    : `<div class="client-pill">${esc(c.name)}</div>`).join('');
 }
 
 function renderServices(list){
@@ -117,17 +119,19 @@ function applySettings(s){
   try {
     const [videos, clients, settings] = await Promise.all([
       sbFetch('videos?select=youtube_id,title,category&show_on_home=eq.true&order=sort_order.asc&limit=8'),
-      sbFetch('clients?select=name&order=sort_order.asc'),
+      sbFetch('clients?select=name,logo_url&order=sort_order.asc'),
       sbFetch('site_settings?select=key,value'),
     ]);
     renderMosaic(videos.length
       ? videos.map(v=>({ id:v.youtube_id, title:v.title, tag:v.category }))
       : FALLBACK_VIDEOS);
-    renderClients(clients.length ? clients.map(c=>c.name) : FALLBACK_CLIENTS);
+    renderClients(clients.length
+      ? clients.map(c=>({ name:c.name, logo:c.logo_url }))
+      : FALLBACK_CLIENTS.map(n=>({ name:n })));
     applySettings(Object.fromEntries(settings.map(r=>[r.key,r.value])));
   } catch (err) {
     renderMosaic(FALLBACK_VIDEOS);
-    renderClients(FALLBACK_CLIENTS);
+    renderClients(FALLBACK_CLIENTS.map(n=>({ name:n })));
   }
 })();
 

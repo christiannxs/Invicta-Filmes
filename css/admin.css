@@ -117,6 +117,14 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
   color: #fff; font-size: 0.85rem; font-family: var(--font-body); outline: none;
 }
 .client-row input:focus { border-color: var(--accent); }
+.cr-logo {
+  width: 74px; height: 40px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-conic-gradient(#1a1a1a 0 25%, #101010 0 50%) 0 0 / 12px 12px;
+  border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+}
+.cr-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.cr-logo.empty { font-size: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.4; }
 
 /* SETTINGS */
 .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }

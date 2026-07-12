@@ -345,6 +345,14 @@ nav {
   margin: -1px 0 0 -1px;
 }
 .client-pill:hover { color: var(--text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
+/* Cliente com logo em imagem no lugar do nome */
+.client-pill.has-logo { display: flex; align-items: center; justify-content: center; min-width: 140px; }
+.client-pill.has-logo img {
+  height: 36px; max-width: 150px; object-fit: contain;
+  filter: grayscale(1); opacity: 0.65;
+  transition: filter 0.25s, opacity 0.25s;
+}
+.client-pill.has-logo:hover img { filter: none; opacity: 1; }
 
 /* ── ABOUT ── */
 .about-section {

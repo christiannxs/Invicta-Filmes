@@ -255,13 +255,39 @@ function renderClients() {
     const row = document.createElement('div');
     row.className = 'client-row';
     row.innerHTML = `
+      <span class="cr-logo${c.logo_url ? '' : ' empty'}">${c.logo_url ? '<img alt="">' : 'sem<br>logo'}</span>
       <input placeholder="Nome do cliente">
+      <input type="file" accept="image/png,image/webp,image/svg+xml,image/jpeg" hidden>
+      <button class="icon-btn" data-act="logo" title="Enviar/trocar a logo (PNG)">${c.logo_url ? 'Trocar logo' : 'Enviar logo'}</button>
+      ${c.logo_url ? '<button class="icon-btn" data-act="unlogo" title="Remover a logo (volta a mostrar o nome)">Logo ✕</button>' : ''}
       <button class="icon-btn" data-act="up" title="Mover para cima">↑</button>
       <button class="icon-btn" data-act="down" title="Mover para baixo">↓</button>
       <button class="icon-btn danger" data-act="del" title="Remover">✕</button>`;
-    const input = row.querySelector('input');
+    if (c.logo_url) row.querySelector('.cr-logo img').src = c.logo_url;
+
+    const input = row.querySelector('input[placeholder]');
     input.value = c.name || '';
     input.addEventListener('input', () => { c.name = input.value; });
+
+    const file = row.querySelector('input[type="file"]');
+    row.querySelector('[data-act="logo"]').addEventListener('click', () => file.click());
+    file.addEventListener('change', async e => {
+      const f = e.target.files[0];
+      e.target.value = '';
+      if (!f) return;
+      setStatus('clients-status', 'Enviando logo…');
+      try {
+        c.logo_url = await uploadAsset(f, 'cliente');
+        renderClients();
+        setStatus('clients-status', '✓ Logo enviada — clique em "Salvar clientes" para publicar', 'ok');
+      } catch (err) {
+        setStatus('clients-status', 'Erro no envio: ' + err.message, 'err');
+      }
+    });
+    row.querySelector('[data-act="unlogo"]')?.addEventListener('click', () => {
+      c.logo_url = null;
+      renderClients();
+    });
     row.querySelector('[data-act="up"]').addEventListener('click', () => {
       if (i === 0) return;
       [clients[i - 1], clients[i]] = [clients[i], clients[i - 1]];
@@ -295,7 +321,7 @@ document.getElementById('save-clients').addEventListener('click', async () => {
   try {
     const rows = clients
       .filter(c => (c.name || '').trim())
-      .map((c, i) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), sort_order: i + 1 }));
+      .map((c, i) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), logo_url: c.logo_url || null, sort_order: i + 1 }));
     if (deletedClientIds.length) {
       const { error } = await sb.from('clients').delete().in('id', deletedClientIds);
       if (error) throw error;
