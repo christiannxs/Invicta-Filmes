@@ -7,7 +7,62 @@ if (typeof supabase === 'undefined') {
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const CATS = ['Clipe musical','DVD / Show','Institucional','Documentário','Publicitário','Social media'];
-const SETTING_KEYS = ['hero_line','hero_sub','about_p1','about_p2','contact_email','contact_whatsapp','contact_instagram','contact_sub'];
+
+/* Estrutura da aba "Textos & Contatos" — cada campo vira uma chave em site_settings */
+const TEXT_SECTIONS = [
+  { title: 'Menu e topo (hero)', fields: [
+    { key: 'nav_cta',          label: 'Botão do menu ("Falar com a gente")' },
+    { key: 'hero_line',        label: 'Linha acima da logo' },
+    { key: 'hero_sub',         label: 'Subtítulo do hero', type: 'textarea', full: true },
+    { key: 'hero_btn_primary', label: 'Botão principal do hero' },
+    { key: 'hero_btn_ghost',   label: 'Botão secundário do hero' },
+    { key: 'marquee_items',    label: 'Faixa animada (um item por linha)', type: 'lines', full: true },
+  ]},
+  { title: 'Portfólio (home)', fields: [
+    { key: 'portfolio_label', label: 'Etiqueta da seção' },
+    { key: 'portfolio_title', label: 'Título', type: 'textarea' },
+    { key: 'portfolio_desc',  label: 'Descrição', type: 'textarea', full: true },
+  ]},
+  { title: 'Serviços', services: true, fields: [
+    { key: 'services_label', label: 'Etiqueta da seção' },
+    { key: 'services_title', label: 'Título', type: 'textarea' },
+    { key: 'services_intro', label: 'Texto de introdução', type: 'textarea', full: true },
+  ]},
+  { title: 'Clientes', fields: [
+    { key: 'clients_label', label: 'Etiqueta da seção' },
+    { key: 'clients_title', label: 'Título' },
+  ]},
+  { title: 'Sobre', stats: true, fields: [
+    { key: 'about_label',  label: 'Etiqueta da seção' },
+    { key: 'about_title',  label: 'Título', type: 'textarea' },
+    { key: 'about_p1',     label: 'Parágrafo 1', type: 'textarea', full: true },
+    { key: 'about_p2',     label: 'Parágrafo 2', type: 'textarea', full: true },
+    { key: 'about_visual', label: 'Texto do quadro ao lado ("INVICTA FILMES / EST. 2019")', type: 'textarea', full: true },
+  ]},
+  { title: 'Contato', fields: [
+    { key: 'contact_label',     label: 'Etiqueta da seção' },
+    { key: 'contact_title',     label: 'Título (*palavra* = destaque)', type: 'textarea' },
+    { key: 'contact_sub',       label: 'Frase da seção', type: 'textarea', full: true },
+    { key: 'contact_email',     label: 'E-mail de contato' },
+    { key: 'contact_whatsapp',  label: 'WhatsApp (só números, com DDI: 5585...)' },
+    { key: 'contact_instagram', label: 'Instagram (sem @)' },
+  ]},
+  { title: 'Rodapé', fields: [
+    { key: 'footer_logo', label: 'Nome no rodapé' },
+    { key: 'footer_copy', label: 'Texto de direitos (após o ano)' },
+  ]},
+  { title: 'Página de produções (catálogo)', fields: [
+    { key: 'catalog_label', label: 'Etiqueta do topo' },
+    { key: 'catalog_title', label: 'Título', type: 'textarea' },
+    { key: 'catalog_sub',   label: 'Subtítulo', type: 'textarea', full: true },
+  ]},
+];
+const LINE_KEYS = ['marquee_items']; // campos "um item por linha" salvos como lista
+
+/* Aparência */
+const DEFAULT_THEME = { accent: '#0737e8', accent_light: '#4d70ff', accent_hover: '#2a55ff', bg: '#000000', text: '#ededed' };
+const DEFAULT_LOGO = 'assets/invicta-logo.png';
+let appearance = { theme: { ...DEFAULT_THEME }, site_title: '', favicon_url: '', logo_url: '', hero_media: { type: 'logo', url: '' } };
 
 let videos = [];
 let deletedVideoIds = [];
@@ -85,7 +140,9 @@ async function loadAll() {
   deletedVideoIds = []; deletedClientIds = [];
   renderVideos();
   renderClients();
-  fillSettings(Object.fromEntries((s.data || []).map(r => [r.key, r.value])));
+  const map = Object.fromEntries((s.data || []).map(r => [r.key, r.value]));
+  fillSettings(map);
+  fillAppearance(map);
 }
 
 /* ── videos ── */
@@ -178,7 +235,8 @@ document.getElementById('save-videos').addEventListener('click', async () => {
       const { error } = await sb.from('videos').delete().in('id', deletedVideoIds);
       if (error) throw error;
     }
-    const { error } = await sb.from('videos').upsert(rows);
+    // defaultToNull:false — linhas novas (sem id) usam o default do banco em vez de null
+    const { error } = await sb.from('videos').upsert(rows, { defaultToNull: false });
     if (error) throw error;
     await loadAll();
     setStatus('videos-status', '✓ Salvo com sucesso', 'ok');
@@ -241,7 +299,8 @@ document.getElementById('save-clients').addEventListener('click', async () => {
       const { error } = await sb.from('clients').delete().in('id', deletedClientIds);
       if (error) throw error;
     }
-    const { error } = await sb.from('clients').upsert(rows);
+    // defaultToNull:false — linhas novas (sem id) usam o default do banco em vez de null
+    const { error } = await sb.from('clients').upsert(rows, { defaultToNull: false });
     if (error) throw error;
     await loadAll();
     setStatus('clients-status', '✓ Salvo com sucesso', 'ok');
@@ -251,14 +310,60 @@ document.getElementById('save-clients').addEventListener('click', async () => {
   btn.disabled = false;
 });
 
-/* ── settings ── */
+/* ── settings (textos) ── */
+function renderSettingsForm() {
+  const wrap = document.getElementById('settings-form');
+  wrap.innerHTML = TEXT_SECTIONS.map(sec => `
+    <h3 class="settings-sec">${sec.title}</h3>
+    <div class="settings-grid">
+      ${sec.fields.map(f => `
+        <div class="field${f.full ? ' full' : ''}">
+          <label>${f.label}</label>
+          ${f.type === 'textarea' || f.type === 'lines'
+            ? `<textarea data-key="${f.key}" rows="${f.type === 'lines' ? 4 : 3}"></textarea>`
+            : `<input data-key="${f.key}">`}
+        </div>`).join('')}
+      ${sec.services ? `
+        <fieldset class="field full stats-fieldset">
+          <legend>Cartões de serviço (símbolo, nome e itens — um item por linha)</legend>
+          ${[0, 1, 2].map(i => `
+            <div class="svc-card" data-svc="${i}">
+              <div class="svc-head">
+                <input data-part="icon" placeholder="◈" title="Símbolo do cartão">
+                <input data-part="name" placeholder="NOME DO SERVIÇO">
+              </div>
+              <textarea data-part="items" rows="4" placeholder="Um item por linha"></textarea>
+            </div>`).join('')}
+        </fieldset>` : ''}
+      ${sec.stats ? `
+        <fieldset class="field full stats-fieldset">
+          <legend>Estatísticas (número + rótulo)</legend>
+          ${[0, 1, 2].map(i => `
+            <div class="stats-row">
+              <input data-stat="${i}" data-part="num" placeholder="80+">
+              <input data-stat="${i}" data-part="label" placeholder="Projetos">
+            </div>`).join('')}
+        </fieldset>` : ''}
+    </div>`).join('');
+}
+
 function fillSettings(map) {
   document.querySelectorAll('#settings-form [data-key]').forEach(el => {
-    el.value = map[el.dataset.key] ?? '';
+    const k = el.dataset.key;
+    const v = map[k];
+    if (LINE_KEYS.includes(k)) el.value = Array.isArray(v) ? v.join('\n') : '';
+    else el.value = typeof v === 'string' ? v : '';
   });
   const stats = Array.isArray(map.stats) ? map.stats : [];
   document.querySelectorAll('#settings-form [data-stat]').forEach(el => {
     el.value = stats[Number(el.dataset.stat)]?.[el.dataset.part] ?? '';
+  });
+  const services = Array.isArray(map.services) ? map.services : [];
+  document.querySelectorAll('#settings-form .svc-card').forEach(card => {
+    const sv = services[Number(card.dataset.svc)] || {};
+    card.querySelector('[data-part="icon"]').value = sv.icon || '';
+    card.querySelector('[data-part="name"]').value = sv.name || '';
+    card.querySelector('[data-part="items"]').value = (sv.items || []).join('\n');
   });
 }
 
@@ -267,15 +372,27 @@ document.getElementById('save-settings').addEventListener('click', async () => {
   btn.disabled = true;
   setStatus('settings-status', 'Salvando…');
   try {
-    const rows = SETTING_KEYS.map(key => ({
-      key,
-      value: document.querySelector(`#settings-form [data-key="${key}"]`).value.trim(),
-    }));
+    const rows = [];
+    document.querySelectorAll('#settings-form [data-key]').forEach(el => {
+      const k = el.dataset.key;
+      rows.push({
+        key: k,
+        value: LINE_KEYS.includes(k)
+          ? el.value.split('\n').map(l => l.trim()).filter(Boolean)
+          : el.value.trim(),
+      });
+    });
     const stats = [0, 1, 2].map(i => ({
       num: document.querySelector(`[data-stat="${i}"][data-part="num"]`).value.trim(),
       label: document.querySelector(`[data-stat="${i}"][data-part="label"]`).value.trim(),
     })).filter(s => s.num || s.label);
     rows.push({ key: 'stats', value: stats });
+    const services = [...document.querySelectorAll('#settings-form .svc-card')].map(card => ({
+      icon: card.querySelector('[data-part="icon"]').value.trim(),
+      name: card.querySelector('[data-part="name"]').value.trim(),
+      items: card.querySelector('[data-part="items"]').value.split('\n').map(l => l.trim()).filter(Boolean),
+    })).filter(sv => sv.name || sv.items.length);
+    rows.push({ key: 'services', value: services });
     const { error } = await sb.from('site_settings').upsert(rows);
     if (error) throw error;
     setStatus('settings-status', '✓ Salvo com sucesso', 'ok');
@@ -285,4 +402,149 @@ document.getElementById('save-settings').addEventListener('click', async () => {
   btn.disabled = false;
 });
 
+/* ── aparência ── */
+function hexNorm(v) {
+  const s = String(v || '').trim().replace(/^#?/, '#');
+  return /^#[0-9a-fA-F]{6}$/.test(s) ? s.toLowerCase() : null;
+}
+function hexMix(a, b, t) { // mistura a cor "a" com "b" na proporção t (0–1)
+  const pa = a.slice(1).match(/../g).map(x => parseInt(x, 16));
+  const pb = b.slice(1).match(/../g).map(x => parseInt(x, 16));
+  return '#' + pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, '0')).join('');
+}
+
+const AP_COLORS = ['accent', 'bg', 'text'];
+function fillAppearance(map) {
+  if (map.theme && typeof map.theme === 'object') appearance.theme = { ...DEFAULT_THEME, ...map.theme };
+  appearance.site_title = typeof map.site_title === 'string' ? map.site_title : '';
+  appearance.favicon_url = typeof map.favicon_url === 'string' ? map.favicon_url : '';
+  appearance.logo_url = typeof map.logo_url === 'string' ? map.logo_url : '';
+  if (map.hero_media && typeof map.hero_media === 'object') appearance.hero_media = { type: 'logo', url: '', ...map.hero_media };
+
+  document.getElementById('ap-site-title').value = appearance.site_title;
+  AP_COLORS.forEach(k => {
+    const v = hexNorm(appearance.theme[k]) || DEFAULT_THEME[k];
+    document.getElementById('ap-c-' + k).value = v;
+    document.getElementById('ap-h-' + k).value = v;
+  });
+  document.getElementById('ap-logo-preview').src = appearance.logo_url || DEFAULT_LOGO;
+  document.getElementById('ap-favicon-preview').src = appearance.favicon_url || DEFAULT_LOGO;
+  document.querySelector(`[name="hero-media"][value="${appearance.hero_media.type === 'image' ? 'image' : 'logo'}"]`).checked = true;
+  updateHeroUploadVisibility();
+}
+
+function updateHeroUploadVisibility() {
+  const isImage = document.querySelector('[name="hero-media"]:checked')?.value === 'image';
+  document.getElementById('ap-hero-upload').hidden = !isImage;
+  const prev = document.getElementById('ap-hero-preview');
+  prev.src = appearance.hero_media.url || '';
+  prev.style.display = appearance.hero_media.url ? '' : 'none';
+}
+
+// Sincroniza o seletor de cor com o campo de texto hex
+AP_COLORS.forEach(k => {
+  const picker = document.getElementById('ap-c-' + k);
+  const hex = document.getElementById('ap-h-' + k);
+  picker.addEventListener('input', () => { hex.value = picker.value; });
+  hex.addEventListener('change', () => {
+    const v = hexNorm(hex.value);
+    if (v) { picker.value = v; hex.value = v; }
+    else hex.value = picker.value;
+  });
+});
+
+document.getElementById('ap-colors-reset').addEventListener('click', () => {
+  AP_COLORS.forEach(k => {
+    document.getElementById('ap-c-' + k).value = DEFAULT_THEME[k];
+    document.getElementById('ap-h-' + k).value = DEFAULT_THEME[k];
+  });
+});
+
+// Uploads: o botão dispara o input de arquivo escondido
+document.querySelectorAll('[data-file]').forEach(btn => {
+  btn.addEventListener('click', () => document.getElementById(btn.dataset.file).click());
+});
+
+async function uploadAsset(file, name) {
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase().replace(/[^a-z0-9]/g, '') || 'png';
+  const path = `${name}-${Date.now()}.${ext}`;
+  const { error } = await sb.storage.from('site-assets').upload(path, file, { cacheControl: '3600', upsert: true });
+  if (error) throw error;
+  return sb.storage.from('site-assets').getPublicUrl(path).data.publicUrl;
+}
+
+function bindUpload(inputId, name, onDone) {
+  document.getElementById(inputId).addEventListener('change', async e => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    setStatus('appearance-status', 'Enviando imagem…');
+    try {
+      const url = await uploadAsset(file, name);
+      onDone(url);
+      setStatus('appearance-status', '✓ Imagem enviada — clique em "Salvar aparência" para publicar', 'ok');
+    } catch (err) {
+      setStatus('appearance-status', 'Erro no envio: ' + err.message, 'err');
+    }
+  });
+}
+
+bindUpload('ap-logo-file', 'logo', url => {
+  appearance.logo_url = url;
+  document.getElementById('ap-logo-preview').src = url;
+});
+bindUpload('ap-favicon-file', 'favicon', url => {
+  appearance.favicon_url = url;
+  document.getElementById('ap-favicon-preview').src = url;
+});
+bindUpload('ap-hero-file', 'hero', url => {
+  appearance.hero_media.url = url;
+  updateHeroUploadVisibility();
+});
+
+document.getElementById('ap-logo-clear').addEventListener('click', () => {
+  appearance.logo_url = '';
+  document.getElementById('ap-logo-preview').src = DEFAULT_LOGO;
+});
+document.getElementById('ap-favicon-clear').addEventListener('click', () => {
+  appearance.favicon_url = '';
+  document.getElementById('ap-favicon-preview').src = DEFAULT_LOGO;
+});
+document.querySelectorAll('[name="hero-media"]').forEach(r =>
+  r.addEventListener('change', updateHeroUploadVisibility));
+
+document.getElementById('save-appearance').addEventListener('click', async () => {
+  const btn = document.getElementById('save-appearance');
+  btn.disabled = true;
+  setStatus('appearance-status', 'Salvando…');
+  try {
+    const accent = hexNorm(document.getElementById('ap-h-accent').value) || DEFAULT_THEME.accent;
+    const theme = {
+      accent,
+      accent_light: hexMix(accent, '#ffffff', 0.35),
+      accent_hover: hexMix(accent, '#ffffff', 0.18),
+      bg: hexNorm(document.getElementById('ap-h-bg').value) || DEFAULT_THEME.bg,
+      text: hexNorm(document.getElementById('ap-h-text').value) || DEFAULT_THEME.text,
+    };
+    const heroType = document.querySelector('[name="hero-media"]:checked')?.value === 'image' ? 'image' : 'logo';
+    if (heroType === 'image' && !appearance.hero_media.url)
+      throw new Error('envie uma foto para o hero ou volte para a opção "Mostrar a logo"');
+    const rows = [
+      { key: 'theme', value: theme },
+      { key: 'site_title', value: document.getElementById('ap-site-title').value.trim() },
+      { key: 'favicon_url', value: appearance.favicon_url },
+      { key: 'logo_url', value: appearance.logo_url },
+      { key: 'hero_media', value: { type: heroType, url: appearance.hero_media.url } },
+    ];
+    const { error } = await sb.from('site_settings').upsert(rows);
+    if (error) throw error;
+    appearance.theme = theme;
+    setStatus('appearance-status', '✓ Salvo — recarregue o site para ver', 'ok');
+  } catch (err) {
+    setStatus('appearance-status', 'Erro: ' + err.message, 'err');
+  }
+  btn.disabled = false;
+});
+
+renderSettingsForm();
 refreshAuth();

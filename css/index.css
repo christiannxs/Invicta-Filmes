@@ -120,6 +120,12 @@ nav {
   width: clamp(300px, 55vw, 640px); height: auto;
   display: block; margin: 0 auto;
 }
+/* Quando o admin escolhe uma foto no lugar da logo do hero */
+.hero h1 .hero-logo.hero-photo {
+  width: clamp(300px, 60vw, 720px);
+  max-height: 55vh; object-fit: cover;
+  border-radius: 6px;
+}
 .hero-sub {
   margin-top: 1.8rem;
   font-size: 0.9rem; font-weight: 300; line-height: 1.8;

@@ -16,14 +16,13 @@ const FALLBACK_CLIENTS = [
 ];
 const MARQUEE_ITEMS = ['Clipes','Documentários','Campanhas','Conteúdo','DVDs','Institucional','Social Media','Motion'];
 
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
-// Marquee
-(function(){
+// Marquee (esc vem de supabase-config.js)
+function renderMarquee(items){
   const track = document.getElementById('mtrack');
-  const all = [...MARQUEE_ITEMS,...MARQUEE_ITEMS,...MARQUEE_ITEMS,...MARQUEE_ITEMS];
+  const all = [...items,...items,...items,...items];
   track.innerHTML = all.map(t=>`<span class="marquee-item">${esc(t)}<span>✦</span></span>`).join('');
-})();
+}
+renderMarquee(MARQUEE_ITEMS);
 
 function thumb(id){ return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`; }
 
@@ -62,13 +61,34 @@ function renderClients(names){
   g.innerHTML = names.map(c=>`<div class="client-pill">${esc(c)}</div>`).join('');
 }
 
+function renderServices(list){
+  if (!Array.isArray(list) || !list.length) return;
+  document.getElementById('services-cards').innerHTML = list.map(sv=>`
+    <div class="service-card">
+      <div class="service-icon">${esc(sv.icon || '◈')}</div>
+      <div class="service-name">${esc(sv.name || '')}</div>
+      <ul class="service-items">${(sv.items || []).map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
+    </div>`).join('');
+}
+
+// Visual do hero: logo padrão, logo personalizada ou foto enviada no admin
+function applyHeroMedia(s){
+  const img = document.getElementById('hero-logo');
+  const hm = s.hero_media || {};
+  if (hm.type === 'image' && hm.url){
+    img.src = hm.url;
+    img.classList.add('hero-photo');
+  } else if (typeof s.logo_url === 'string' && s.logo_url){
+    img.src = s.logo_url;
+  }
+}
+
 function applySettings(s){
-  const setText = (id,v)=>{ const el=document.getElementById(id); if(el && typeof v==='string' && v) el.textContent=v; };
-  setText('hero-line', s.hero_line);
-  setText('hero-sub', s.hero_sub);
-  setText('about-p1', s.about_p1);
-  setText('about-p2', s.about_p2);
-  setText('contact-sub', s.contact_sub);
+  applyBranding(s);   // cores, título da aba, favicon, logo da nav
+  applyTexts(s);      // todos os elementos [data-s]
+  applyHeroMedia(s);
+  renderServices(s.services);
+  if (Array.isArray(s.marquee_items) && s.marquee_items.length) renderMarquee(s.marquee_items);
   if (Array.isArray(s.stats) && s.stats.length){
     document.getElementById('about-stats').innerHTML = s.stats.map(st=>
       `<div><div class="stat-num">${esc(st.num)}</div><div class="stat-lbl">${esc(st.label)}</div></div>`).join('');

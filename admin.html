@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-no-theme>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +39,7 @@
   <nav class="tabs">
     <button class="tab active" data-tab="videos">Produções</button>
     <button class="tab" data-tab="clients">Clientes</button>
+    <button class="tab" data-tab="appearance">Aparência</button>
     <button class="tab" data-tab="settings">Textos &amp; Contatos</button>
   </nav>
 
@@ -68,57 +69,83 @@
     </div>
   </section>
 
-  <!-- TAB: SETTINGS -->
-  <section class="tab-content" id="tab-settings">
-    <div class="settings-grid" id="settings-form">
-      <div class="field full">
-        <label>Linha acima do título (hero)</label>
-        <input data-key="hero_line">
+  <!-- TAB: APPEARANCE -->
+  <section class="tab-content" id="tab-appearance">
+    <p class="hint" style="margin-bottom:1.5rem;">Personalize a identidade visual do site: cores, logo, ícone da aba e o destaque do topo da home. As imagens enviadas ficam hospedadas no seu Supabase.</p>
+
+    <div class="ap-card">
+      <h3 class="ap-title">Identidade</h3>
+      <div class="field full" style="margin-bottom:1.2rem;">
+        <label>Título do site (aparece na aba do navegador e no Google)</label>
+        <input id="ap-site-title" placeholder="Invicta Filmes — Produção Audiovisual">
       </div>
-      <div class="field full">
-        <label>Subtítulo do hero</label>
-        <textarea data-key="hero_sub" rows="2"></textarea>
-      </div>
-      <div class="field full">
-        <label>Sobre — parágrafo 1</label>
-        <textarea data-key="about_p1" rows="3"></textarea>
-      </div>
-      <div class="field full">
-        <label>Sobre — parágrafo 2</label>
-        <textarea data-key="about_p2" rows="3"></textarea>
-      </div>
-      <fieldset class="field full stats-fieldset">
-        <legend>Estatísticas (número + rótulo)</legend>
-        <div class="stats-row">
-          <input data-stat="0" data-part="num" placeholder="80+">
-          <input data-stat="0" data-part="label" placeholder="Projetos">
+      <div class="ap-upload">
+        <label>Logo (menu e hero)</label>
+        <div class="ap-upload-row">
+          <img id="ap-logo-preview" class="ap-preview" alt="Prévia da logo">
+          <div class="ap-upload-actions">
+            <input type="file" id="ap-logo-file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+            <button class="btn-ghost-sm" data-file="ap-logo-file">Enviar nova logo</button>
+            <button class="btn-ghost-sm" id="ap-logo-clear">Usar logo padrão</button>
+          </div>
         </div>
-        <div class="stats-row">
-          <input data-stat="1" data-part="num" placeholder="5">
-          <input data-stat="1" data-part="label" placeholder="Anos">
+      </div>
+      <div class="ap-upload">
+        <label>Favicon (ícone da aba do navegador — imagem quadrada, ex: 64×64)</label>
+        <div class="ap-upload-row">
+          <img id="ap-favicon-preview" class="ap-preview small" alt="Prévia do favicon">
+          <div class="ap-upload-actions">
+            <input type="file" id="ap-favicon-file" accept="image/png,image/x-icon,image/svg+xml,image/jpeg,image/webp" hidden>
+            <button class="btn-ghost-sm" data-file="ap-favicon-file">Enviar favicon</button>
+            <button class="btn-ghost-sm" id="ap-favicon-clear">Usar padrão</button>
+          </div>
         </div>
-        <div class="stats-row">
-          <input data-stat="2" data-part="num" placeholder="100%">
-          <input data-stat="2" data-part="label" placeholder="Dedicação">
-        </div>
-      </fieldset>
-      <div class="field">
-        <label>E-mail de contato</label>
-        <input data-key="contact_email" type="email">
-      </div>
-      <div class="field">
-        <label>WhatsApp (só números, com DDI: 5585...)</label>
-        <input data-key="contact_whatsapp" inputmode="numeric">
-      </div>
-      <div class="field">
-        <label>Instagram (sem @)</label>
-        <input data-key="contact_instagram">
-      </div>
-      <div class="field full">
-        <label>Frase da seção de contato</label>
-        <textarea data-key="contact_sub" rows="2"></textarea>
       </div>
     </div>
+
+    <div class="ap-card">
+      <h3 class="ap-title">Cores</h3>
+      <div class="ap-color-row">
+        <label>Cor principal (botões, destaques e links)</label>
+        <input type="color" id="ap-c-accent"><input class="ap-hex" id="ap-h-accent" maxlength="7" spellcheck="false">
+      </div>
+      <div class="ap-color-row">
+        <label>Cor de fundo</label>
+        <input type="color" id="ap-c-bg"><input class="ap-hex" id="ap-h-bg" maxlength="7" spellcheck="false">
+      </div>
+      <div class="ap-color-row">
+        <label>Cor do texto</label>
+        <input type="color" id="ap-c-text"><input class="ap-hex" id="ap-h-text" maxlength="7" spellcheck="false">
+      </div>
+      <p class="hint" style="margin:0.8rem 0 1rem;">Os tons mais claros da cor principal (hover e textos pequenos) são gerados automaticamente. O site foi desenhado para fundo escuro com texto claro.</p>
+      <button class="btn-ghost-sm" id="ap-colors-reset">Restaurar cores originais</button>
+    </div>
+
+    <div class="ap-card">
+      <h3 class="ap-title">Destaque do hero (topo da home)</h3>
+      <label class="ap-radio"><input type="radio" name="hero-media" value="logo"> Mostrar a logo</label>
+      <label class="ap-radio"><input type="radio" name="hero-media" value="image"> Mostrar uma foto</label>
+      <div class="ap-upload" id="ap-hero-upload" hidden>
+        <div class="ap-upload-row">
+          <img id="ap-hero-preview" class="ap-preview wide" alt="Prévia da foto do hero">
+          <div class="ap-upload-actions">
+            <input type="file" id="ap-hero-file" accept="image/png,image/jpeg,image/webp" hidden>
+            <button class="btn-ghost-sm" data-file="ap-hero-file">Enviar foto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <span class="save-status" id="appearance-status"></span>
+      <button class="btn-primary" id="save-appearance">Salvar aparência</button>
+    </div>
+  </section>
+
+  <!-- TAB: SETTINGS (textos — formulário gerado pelo admin.js) -->
+  <section class="tab-content" id="tab-settings">
+    <p class="hint" style="margin-bottom:1.5rem;">Todos os textos do site. Em títulos, <strong>Enter</strong> quebra a linha; escreva <strong>*palavra*</strong> para destacá-la na cor principal.</p>
+    <div id="settings-form"></div>
     <div class="save-bar">
       <span class="save-status" id="settings-status"></span>
       <button class="btn-primary" id="save-settings">Salvar textos</button>

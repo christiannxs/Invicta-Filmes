@@ -13,8 +13,7 @@ const FALLBACK = [
 let videos = [];
 let currentCat = 'todos';
 
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-
+// esc vem de supabase-config.js
 function thumb(id) { return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`; }
 function thumbFb(id) { return `https://img.youtube.com/vi/${id}/hqdefault.jpg`; }
 
@@ -66,10 +65,16 @@ function filter(btn) {
 // Carrega do Supabase (fallback local)
 (async function init() {
   try {
-    const rows = await sbFetch('videos?select=youtube_id,title,artist,category,description&order=sort_order.asc');
+    const [rows, settings] = await Promise.all([
+      sbFetch('videos?select=youtube_id,title,artist,category,description&order=sort_order.asc'),
+      sbFetch('site_settings?select=key,value'),
+    ]);
     videos = rows.length
       ? rows.map(r => ({ id:r.youtube_id, title:r.title, artist:r.artist, cat:r.category, desc:r.description }))
       : FALLBACK;
+    const s = Object.fromEntries(settings.map(r => [r.key, r.value]));
+    applyBranding(s);
+    applyTexts(s);
   } catch (err) {
     videos = FALLBACK;
   }

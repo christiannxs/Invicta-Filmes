@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Invicta Filmes — Produção Audiovisual</title>
+<link rel="icon" href="assets/invicta-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -20,7 +21,7 @@
     <li><a href="#servicos">Serviços</a></li>
     <li><a href="#sobre">Sobre</a></li>
   </ul>
-  <a href="#contato" class="nav-cta">Falar com a gente</a>
+  <a href="#contato" class="nav-cta" data-s="nav_cta">Falar com a gente</a>
   <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
@@ -32,18 +33,18 @@
   <a href="catalogo.html">Produções</a>
   <a href="#servicos">Serviços</a>
   <a href="#sobre">Sobre</a>
-  <a href="#contato" class="mobile-menu-cta">Falar com a gente</a>
+  <a href="#contato" class="mobile-menu-cta" data-s="nav_cta">Falar com a gente</a>
 </div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
-  <span class="hero-line" id="hero-line">Produção audiovisual — Fortaleza, CE</span>
-  <h1><img src="assets/invicta-logo.png" alt="Invicta Filmes" class="hero-logo"></h1>
-  <p class="hero-sub" id="hero-sub">Do conceito à entrega final — clipes, campanhas, documentários e conteúdo com padrão cinematográfico.</p>
+  <span class="hero-line" data-s="hero_line">Produção audiovisual — Fortaleza, CE</span>
+  <h1><img src="assets/invicta-logo.png" alt="Invicta Filmes" class="hero-logo" id="hero-logo"></h1>
+  <p class="hero-sub" data-s="hero_sub">Do conceito à entrega final — clipes, campanhas, documentários e conteúdo com padrão cinematográfico.</p>
   <div class="hero-btns">
-    <a href="#portfolio" class="btn-primary">Ver portfólio</a>
-    <a href="#contato" class="btn-ghost">Solicitar orçamento</a>
+    <a href="#portfolio" class="btn-primary" data-s="hero_btn_primary">Ver portfólio</a>
+    <a href="#contato" class="btn-ghost" data-s="hero_btn_ghost">Solicitar orçamento</a>
   </div>
 </section>
 
@@ -56,10 +57,10 @@
 <section class="mosaic-section" id="portfolio">
   <div class="mosaic-header">
     <div>
-      <span class="sec-label">Portfólio</span>
-      <h2 class="sec-title">TRABALHOS<br>SELECIONADOS</h2>
+      <span class="sec-label" data-s="portfolio_label">Portfólio</span>
+      <h2 class="sec-title" data-s="portfolio_title">TRABALHOS<br>SELECIONADOS</h2>
     </div>
-    <p class="mosaic-desc">Clique para assistir. Cada projeto é um vídeo direto do YouTube.</p>
+    <p class="mosaic-desc" data-s="portfolio_desc">Clique para assistir. Cada projeto é um vídeo direto do YouTube.</p>
   </div>
   <div class="mosaic" id="mosaic-grid"></div>
 </section>
@@ -67,13 +68,13 @@
 <!-- SERVICES -->
 <section class="services-section" id="servicos">
   <div>
-    <span class="sec-label">O que fazemos</span>
-    <h2 class="sec-title">NOSSOS<br>SERVIÇOS</h2>
-    <p style="margin-top:1.5rem;font-size:0.88rem;color:var(--muted);line-height:1.9;max-width:380px;">
+    <span class="sec-label" data-s="services_label">O que fazemos</span>
+    <h2 class="sec-title" data-s="services_title">NOSSOS<br>SERVIÇOS</h2>
+    <p style="margin-top:1.5rem;font-size:0.88rem;color:var(--muted);line-height:1.9;max-width:380px;" data-s="services_intro">
       Da ideia ao corte final. Trabalhamos com marcas, artistas e empresas que querem conteúdo com identidade e impacto real.
     </p>
   </div>
-  <div class="services-right">
+  <div class="services-right" id="services-cards">
     <div class="service-card">
       <div class="service-icon">◈</div>
       <div class="service-name">ESTRATÉGIA & CONCEITO</div>
@@ -108,18 +109,18 @@
 
 <!-- CLIENTS -->
 <section class="clients-section">
-  <span class="sec-label">Quem confia na Invicta</span>
-  <h2 class="sec-title">CLIENTES</h2>
+  <span class="sec-label" data-s="clients_label">Quem confia na Invicta</span>
+  <h2 class="sec-title" data-s="clients_title">CLIENTES</h2>
   <div class="clients-grid" id="clients-grid"></div>
 </section>
 
 <!-- ABOUT -->
 <section class="about-section" id="sobre">
   <div class="about-text">
-    <span class="sec-label">Sobre a produtora</span>
-    <h2 class="sec-title">FEITA PRA<br>CONTAR O<br>QUE IMPORTA</h2>
-    <p id="about-p1">A Invicta Filmes nasce da crença de que toda marca, todo artista e toda ideia tem uma história que merece ser contada com cuidado e com padrão.</p>
-    <p id="about-p2">Trabalhamos com direção criativa, captação e pós-produção para entregar projetos que emocionam e geram resultado — do palco ao digital.</p>
+    <span class="sec-label" data-s="about_label">Sobre a produtora</span>
+    <h2 class="sec-title" data-s="about_title">FEITA PRA<br>CONTAR O<br>QUE IMPORTA</h2>
+    <p data-s="about_p1">A Invicta Filmes nasce da crença de que toda marca, todo artista e toda ideia tem uma história que merece ser contada com cuidado e com padrão.</p>
+    <p data-s="about_p2">Trabalhamos com direção criativa, captação e pós-produção para entregar projetos que emocionam e geram resultado — do palco ao digital.</p>
     <div class="about-stats" id="about-stats">
       <div><div class="stat-num">80+</div><div class="stat-lbl">Projetos</div></div>
       <div><div class="stat-num">5</div><div class="stat-lbl">Anos</div></div>
@@ -127,15 +128,15 @@
     </div>
   </div>
   <div class="about-visual">
-    <div class="about-visual-inner">INVICTA FILMES<br>EST. 2019</div>
+    <div class="about-visual-inner" data-s="about_visual">INVICTA FILMES<br>EST. 2019</div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section class="contact-section" id="contato">
-  <span class="sec-label">Vamos trabalhar juntos</span>
-  <h2 class="contact-title">TEM UM<br>PROJETO<br>EM <em>MENTE?</em></h2>
-  <p class="contact-sub" id="contact-sub">Fale com a gente e vamos transformar a sua ideia em audiovisual de impacto.</p>
+  <span class="sec-label" data-s="contact_label">Vamos trabalhar juntos</span>
+  <h2 class="contact-title" data-s="contact_title">TEM UM<br>PROJETO<br>EM <em>MENTE?</em></h2>
+  <p class="contact-sub" data-s="contact_sub">Fale com a gente e vamos transformar a sua ideia em audiovisual de impacto.</p>
   <div class="contact-btns">
     <a href="mailto:contato@invictafilmes.com" class="btn-primary" id="contact-email">E-mail</a>
     <a href="https://wa.me/5585999999999" class="btn-ghost" target="_blank" rel="noopener" id="contact-whatsapp">WhatsApp</a>
@@ -144,8 +145,8 @@
 </section>
 
 <footer>
-  <span class="footer-logo">INVICTA FILMES</span>
-  <span class="footer-copy">© <span id="year">2026</span> — Todos os direitos reservados</span>
+  <span class="footer-logo" data-s="footer_logo">INVICTA FILMES</span>
+  <span class="footer-copy">© <span id="year">2026</span> — <span data-s="footer_copy">Todos os direitos reservados</span></span>
 </footer>
 
 <!-- LIGHTBOX -->
