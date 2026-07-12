@@ -256,7 +256,7 @@ function renderClients() {
     row.className = 'client-row';
     row.innerHTML = `
       <span class="cr-logo${c.logo_url ? '' : ' empty'}">${c.logo_url ? '<img alt="">' : 'sem<br>logo'}</span>
-      <input placeholder="Nome do cliente">
+      <input placeholder="Nome (opcional — usado como descrição da logo)">
       <input type="file" accept="image/png,image/webp,image/svg+xml,image/jpeg" hidden>
       <button class="icon-btn" data-act="logo" title="Enviar/trocar a logo (PNG)">${c.logo_url ? 'Trocar logo' : 'Enviar logo'}</button>
       ${c.logo_url ? '<button class="icon-btn" data-act="unlogo" title="Remover a logo (volta a mostrar o nome)">Logo ✕</button>' : ''}
@@ -319,9 +319,15 @@ document.getElementById('save-clients').addEventListener('click', async () => {
   btn.disabled = true;
   setStatus('clients-status', 'Salvando…');
   try {
+    // Vale o cliente que tiver logo OU nome (só é descartada a linha totalmente vazia)
     const rows = clients
-      .filter(c => (c.name || '').trim())
-      .map((c, i) => ({ ...(c.id ? { id: c.id } : {}), name: c.name.trim(), logo_url: c.logo_url || null, sort_order: i + 1 }));
+      .filter(c => c.logo_url || (c.name || '').trim())
+      .map((c, i) => ({
+        ...(c.id ? { id: c.id } : {}),
+        name: (c.name || '').trim() || null,
+        logo_url: c.logo_url || null,
+        sort_order: i + 1,
+      }));
     if (deletedClientIds.length) {
       const { error } = await sb.from('clients').delete().in('id', deletedClientIds);
       if (error) throw error;

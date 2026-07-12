@@ -59,8 +59,8 @@ function renderMosaic(videos){
 function renderClients(list){
   const g = document.getElementById('clients-grid');
   g.innerHTML = list.map(c => c.logo
-    ? `<div class="client-pill has-logo"><img src="${esc(c.logo)}" alt="${esc(c.name)}" title="${esc(c.name)}" loading="lazy"></div>`
-    : `<div class="client-pill">${esc(c.name)}</div>`).join('');
+    ? `<div class="client-pill has-logo"><img src="${esc(c.logo)}" alt="${esc(c.name || 'Cliente')}"${c.name ? ` title="${esc(c.name)}"` : ''} loading="lazy"></div>`
+    : c.name ? `<div class="client-pill">${esc(c.name)}</div>` : '').join('');
 }
 
 function renderServices(list){
