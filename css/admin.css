@@ -36,7 +36,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .login-logo { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0.08em; }
 .login-logo span { color: var(--accent-light); }
 .login-logo small { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.15em; }
-.login-box h1 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin: 0.5rem 0 2rem; }
+.login-logo-img { width: 180px; max-width: 70%; height: auto; align-self: center; margin-bottom: 0.8rem; }
+.login-box h1 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin: 0.5rem 0 2rem; text-align: center; }
 .login-box label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
 .login-box input {
   padding: 0.7rem 0.9rem; margin-bottom: 1.2rem;
@@ -53,6 +54,9 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
   padding: 1.4rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem;
 }
 .panel-header-actions { display: flex; gap: 0.6rem; }
+.header-logo { display: flex; align-items: center; gap: 0.6rem; }
+.header-logo img { height: 34px; width: auto; display: block; }
+.header-logo small { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
 
 .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; overflow-x: auto; }
 .tab {
