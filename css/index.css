@@ -189,7 +189,7 @@ nav {
 }
 
 /* ── MOSAIC ── */
-.mosaic-section { padding: 5rem 0; }
+.mosaic-section { padding: 5rem 0; container-type: inline-size; }
 .mosaic-header {
   padding: 0 3rem 3rem;
   display: flex; align-items: flex-end; justify-content: space-between;
@@ -199,10 +199,14 @@ nav {
   line-height: 1.7; text-align: right;
 }
 /* Todos os tiles mantêm 16:9 (proporção nativa das thumbs do YouTube);
-   a variedade do mosaico vem do tamanho: 1 tile destaque 2×2 + tiles 1×1. */
+   a variedade do mosaico vem do tamanho: tiles destaque 2×2 + tiles 1×1.
+   A linha tem a altura exata de um tile 1×1, calculada da largura do container. */
 .mosaic {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: row dense;
+  grid-auto-rows: calc((100vw - 9px) / 4 * 9 / 16);
+  grid-auto-rows: calc((100cqw - 9px) / 4 * 9 / 16);
   gap: 3px;
 }
 .mosaic-item {
@@ -210,8 +214,8 @@ nav {
   background: var(--bg3); cursor: pointer;
   aspect-ratio: 16 / 9;
 }
-.mosaic-item:nth-child(1) {
-  grid-column: 1 / 3; grid-row: 1 / 3;
+.mosaic-item--big {
+  grid-column: span 2; grid-row: span 2;
   aspect-ratio: auto; /* 2 colunas + 2 linhas ≈ 16:9, definido pelo grid */
 }
 
@@ -267,12 +271,10 @@ nav {
   color: rgba(255,255,255,0.25);
 }
 
-/* tile CTA — preenche as células restantes do mosaico e leva ao catálogo completo */
+/* tile CTA — mesma célula 16:9 dos demais; leva ao catálogo completo */
 .mosaic-cta {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 0.6rem; text-decoration: none;
-  grid-column: span var(--cta-cols, 1);
-  aspect-ratio: auto; min-height: 140px;
   background: var(--bg3);
   border: 1px solid var(--border);
   transition: background 0.4s, border-color 0.4s;
@@ -460,10 +462,12 @@ footer {
   nav { padding: 1.2rem 1.5rem; }
   .nav-links, .nav-cta { display: none; }
   .nav-toggle { display: flex; }
-  /* mobile: destaque em largura total, demais em 2 colunas — tudo 16:9 */
-  .mosaic { grid-template-columns: repeat(2,1fr); }
-  .mosaic-item:nth-child(1) { grid-column:1/3; grid-row:auto; aspect-ratio:16/9; }
-  .mosaic-cta { grid-column: span var(--cta-cols-m, 1); min-height: 110px; }
+  /* mobile: 2 colunas; destaques 2×2 viram largura total — tudo 16:9 */
+  .mosaic {
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: calc((100vw - 3px) / 2 * 9 / 16);
+    grid-auto-rows: calc((100cqw - 3px) / 2 * 9 / 16);
+  }
   .mosaic-header { flex-direction:column; gap:1rem; padding:0 1.5rem 2rem; }
   .mosaic-desc { text-align:left; max-width:100%; }
   .services-section, .about-section { grid-template-columns:1fr; gap:3rem; padding:4rem 1.5rem; }

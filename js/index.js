@@ -26,13 +26,22 @@ renderMarquee(MARQUEE_ITEMS);
 
 function thumb(id){ return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`; }
 
+// Para cada quantidade de vídeos: quantos tiles destaque (2×2) e se o tile
+// de catálogo entra — combinações que fecham a grade sem sobras, mantendo
+// todos os tiles em 16:9 (4 colunas no desktop, 2 no mobile).
+const MOSAIC_LAYOUTS = {
+  1:{big:0,cta:true}, 2:{big:2,cta:false}, 3:{big:0,cta:true}, 4:{big:1,cta:true},
+  5:{big:1,cta:false}, 6:{big:2,cta:false}, 7:{big:3,cta:false}, 8:{big:1,cta:true},
+};
+
 function renderMosaic(videos){
   const g = document.getElementById('mosaic-grid');
   g.innerHTML = '';
   const shown = videos.slice(0,8);
+  const layout = MOSAIC_LAYOUTS[shown.length] || {big:1,cta:true};
   shown.forEach((v,i)=>{
     const el = document.createElement('div');
-    el.className = 'mosaic-item';
+    el.className = i < layout.big ? 'mosaic-item mosaic-item--big' : 'mosaic-item';
     el.tabIndex = 0;
     el.setAttribute('role','button');
     el.setAttribute('aria-label',`Assistir ${v.title}`);
@@ -55,17 +64,16 @@ function renderMosaic(videos){
     });
     g.appendChild(el);
   });
-  // Tile final: expande para preencher as células restantes da grade e leva ao catálogo.
-  // Destaque ocupa 4 células no desktop (2×2) e 2 no mobile; os demais vídeos, 1 cada.
-  const cta = document.createElement('a');
-  cta.className = 'mosaic-item mosaic-cta';
-  cta.href = '/catalogo';
-  cta.style.setProperty('--cta-cols',   ((4 - (shown.length + 3) % 4) % 4) || 4);
-  cta.style.setProperty('--cta-cols-m', ((2 - (shown.length + 1) % 2) % 2) || 2);
-  cta.innerHTML = `
-    <span class="mosaic-cta-label">Ver catálogo<br>completo</span>
-    <span class="mosaic-cta-arrow" aria-hidden="true">→</span>`;
-  g.appendChild(cta);
+  // Tile de catálogo: só entra quando fecha a última célula da grade
+  if (layout.cta){
+    const cta = document.createElement('a');
+    cta.className = 'mosaic-item mosaic-cta';
+    cta.href = '/catalogo';
+    cta.innerHTML = `
+      <span class="mosaic-cta-label">Ver catálogo<br>completo</span>
+      <span class="mosaic-cta-arrow" aria-hidden="true">→</span>`;
+    g.appendChild(cta);
+  }
 }
 
 function renderClients(list){
