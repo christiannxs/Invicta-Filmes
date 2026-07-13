@@ -21,6 +21,7 @@ nav {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.2rem 3rem;
   background: rgba(0,0,0,0.9);
+  -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
 }
@@ -144,9 +145,22 @@ nav {
 @media(max-width: 768px) {
   nav { padding: 1.1rem 1.5rem; }
   .hero { padding: 3rem 1.5rem 2rem; }
+  .hero-sub { max-width: 100%; }
   .filter-bar { padding: 0 1.5rem; }
+  .filter-btn { padding: 1rem 1.1rem; }
   .catalog-wrap { padding: 2rem 1.5rem 4rem; }
-  .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .catalog-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+  .card-info { padding: 0.8rem 0.9rem 1rem; }
+  .card-title { font-size: 1rem; }
+  .lightbox { padding: 1rem; }
+  .lb-close { top: -2.8rem; }
+  .lb-label { font-size: 1rem; margin-top: 1rem; padding: 0 0.5rem; text-align: center; }
+}
+
+/* TOUCH (sem hover): thumbs claras e botão de play sempre visível */
+@media (hover: none) {
+  .card-thumb img { filter: brightness(0.85) saturate(1); }
+  .play-btn { opacity: 1; }
 }
 
 /* REDUCED MOTION */

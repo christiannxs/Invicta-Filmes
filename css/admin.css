@@ -202,6 +202,8 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--text);
 .save-status.err { color: #ff6b6b; }
 
 @media (max-width: 700px) {
+  .panel-header { flex-wrap: wrap; gap: 0.8rem; }
+  .login-box { padding: 2rem 1.5rem; }
   .video-row { grid-template-columns: 1fr; }
   .vr-thumb { width: 120px; }
   .vr-fields { grid-template-columns: 1fr; }
