@@ -198,24 +198,22 @@ nav {
   font-size: 0.85rem; color: var(--muted); max-width: 260px;
   line-height: 1.7; text-align: right;
 }
+/* Todos os tiles mantêm 16:9 (proporção nativa das thumbs do YouTube);
+   a variedade do mosaico vem do tamanho: 1 tile destaque 2×2 + tiles 1×1. */
 .mosaic {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 300px 300px 260px;
+  grid-template-columns: repeat(4, 1fr);
   gap: 3px;
 }
 .mosaic-item {
   position: relative; overflow: hidden;
   background: var(--bg3); cursor: pointer;
+  aspect-ratio: 16 / 9;
 }
-.mosaic-item:nth-child(1)  { grid-column: 1 / 6;  grid-row: 1; }
-.mosaic-item:nth-child(2)  { grid-column: 6 / 9;  grid-row: 1; }
-.mosaic-item:nth-child(3)  { grid-column: 9 / 13; grid-row: 1 / 3; }
-.mosaic-item:nth-child(4)  { grid-column: 1 / 4;  grid-row: 2; }
-.mosaic-item:nth-child(5)  { grid-column: 4 / 9;  grid-row: 2; }
-.mosaic-item:nth-child(6)  { grid-column: 1 / 5;  grid-row: 3; }
-.mosaic-item:nth-child(7)  { grid-column: 5 / 9;  grid-row: 3; }
-.mosaic-item:nth-child(8)  { grid-column: 9 / 13; grid-row: 3; }
+.mosaic-item:nth-child(1) {
+  grid-column: 1 / 3; grid-row: 1 / 3;
+  aspect-ratio: auto; /* 2 colunas + 2 linhas ≈ 16:9, definido pelo grid */
+}
 
 .mosaic-thumb {
   width: 100%; height: 100%; object-fit: cover; display: block;
@@ -268,6 +266,33 @@ nav {
   font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
   color: rgba(255,255,255,0.25);
 }
+
+/* tile CTA — preenche as células restantes do mosaico e leva ao catálogo completo */
+.mosaic-cta {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.6rem; text-decoration: none;
+  grid-column: span var(--cta-cols, 1);
+  aspect-ratio: auto; min-height: 140px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  transition: background 0.4s, border-color 0.4s;
+}
+.mosaic-cta-label {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+  text-align: center; padding: 0 1rem;
+  transition: color 0.4s;
+}
+.mosaic-cta-arrow {
+  font-size: 1.3rem; color: var(--accent-light);
+  transition: transform 0.35s;
+}
+.mosaic-cta:hover, .mosaic-cta:focus-visible {
+  background: rgba(7,55,232,0.12);
+  border-color: rgba(77,112,255,0.5);
+}
+.mosaic-cta:hover .mosaic-cta-label { color: #fff; }
+.mosaic-cta:hover .mosaic-cta-arrow { transform: translateX(4px); }
 
 /* ── LIGHTBOX ── */
 .lightbox {
@@ -435,15 +460,10 @@ footer {
   nav { padding: 1.2rem 1.5rem; }
   .nav-links, .nav-cta { display: none; }
   .nav-toggle { display: flex; }
-  .mosaic { grid-template-columns: repeat(6,1fr); grid-auto-rows: 180px; grid-template-rows: 200px 200px 180px 180px; }
-  .mosaic-item:nth-child(1) { grid-column:1/7; grid-row:1; }
-  .mosaic-item:nth-child(2) { grid-column:1/4; grid-row:2; }
-  .mosaic-item:nth-child(3) { grid-column:4/7; grid-row:2/4; }
-  .mosaic-item:nth-child(4) { grid-column:1/4; grid-row:3; }
-  .mosaic-item:nth-child(5) { grid-column:1/7; grid-row:4; }
-  .mosaic-item:nth-child(6) { grid-column:1/4; grid-row:5; }
-  .mosaic-item:nth-child(7) { grid-column:4/7; grid-row:5; }
-  .mosaic-item:nth-child(8) { grid-column:1/7; grid-row:6; }
+  /* mobile: destaque em largura total, demais em 2 colunas — tudo 16:9 */
+  .mosaic { grid-template-columns: repeat(2,1fr); }
+  .mosaic-item:nth-child(1) { grid-column:1/3; grid-row:auto; aspect-ratio:16/9; }
+  .mosaic-cta { grid-column: span var(--cta-cols-m, 1); min-height: 110px; }
   .mosaic-header { flex-direction:column; gap:1rem; padding:0 1.5rem 2rem; }
   .mosaic-desc { text-align:left; max-width:100%; }
   .services-section, .about-section { grid-template-columns:1fr; gap:3rem; padding:4rem 1.5rem; }

@@ -29,7 +29,8 @@ function thumb(id){ return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 function renderMosaic(videos){
   const g = document.getElementById('mosaic-grid');
   g.innerHTML = '';
-  videos.slice(0,8).forEach((v,i)=>{
+  const shown = videos.slice(0,8);
+  shown.forEach((v,i)=>{
     const el = document.createElement('div');
     el.className = 'mosaic-item';
     el.tabIndex = 0;
@@ -54,6 +55,17 @@ function renderMosaic(videos){
     });
     g.appendChild(el);
   });
+  // Tile final: expande para preencher as células restantes da grade e leva ao catálogo.
+  // Destaque ocupa 4 células no desktop (2×2) e 2 no mobile; os demais vídeos, 1 cada.
+  const cta = document.createElement('a');
+  cta.className = 'mosaic-item mosaic-cta';
+  cta.href = '/catalogo';
+  cta.style.setProperty('--cta-cols',   ((4 - (shown.length + 3) % 4) % 4) || 4);
+  cta.style.setProperty('--cta-cols-m', ((2 - (shown.length + 1) % 2) % 2) || 2);
+  cta.innerHTML = `
+    <span class="mosaic-cta-label">Ver catálogo<br>completo</span>
+    <span class="mosaic-cta-arrow" aria-hidden="true">→</span>`;
+  g.appendChild(cta);
 }
 
 function renderClients(list){
