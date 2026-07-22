@@ -6,7 +6,7 @@ const FALLBACK = [
   { id:'X82BOrgMeos', title:'PROJETO 04', artist:'Artista D', cat:'Clipe musical', desc:'Produção audiovisual com direção criativa completa.' },
   { id:'-6J3HfX4sbg', title:'PROJETO 05', artist:'Artista E', cat:'DVD / Show', desc:'Faixa do DVD ao vivo gravado em Fortaleza.' },
   { id:'N62whNs7CqQ', title:'PROJETO 06', artist:'Artista F', cat:'Clipe musical', desc:'Clipe oficial.' },
-  { id:'P_kzO3v7ixY', title:'PROJETO 07', artist:'Artista G', cat:'After movie', desc:'Clipe documental com fotografia do interior.' },
+  { id:'P_kzO3v7ixY', title:'PROJETO 07', artist:'Artista G', cat:'Aftermovie', desc:'Clipe documental com fotografia do interior.' },
   { id:'h_2Gk89is-o', title:'PROJETO 08', artist:'Artista H', cat:'Clipe musical', desc:'Clipe oficial de lançamento.' },
 ];
 

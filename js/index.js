@@ -6,7 +6,7 @@ const FALLBACK_VIDEOS = [
   { id:'X82BOrgMeos', title:'PROJETO 04', tag:'Clipe musical' },
   { id:'-6J3HfX4sbg', title:'PROJETO 05', tag:'DVD / Show' },
   { id:'N62whNs7CqQ', title:'PROJETO 06', tag:'Clipe musical' },
-  { id:'P_kzO3v7ixY', title:'PROJETO 07', tag:'After movie' },
+  { id:'P_kzO3v7ixY', title:'PROJETO 07', tag:'Aftermovie' },
   { id:'h_2Gk89is-o', title:'PROJETO 08', tag:'Clipe musical' },
 ];
 const FALLBACK_CLIENTS = [
@@ -14,7 +14,7 @@ const FALLBACK_CLIENTS = [
   'Empresa F','Marca G','Artista H','Empresa I','Marca J',
   'Artista K','Empresa L','Marca M','Artista N',
 ];
-const MARQUEE_ITEMS = ['Clipes','After Movie','Campanhas','Conteúdo','DVDs','Transmissões','Motion'];
+const MARQUEE_ITEMS = ['Clipes','Aftermovie','Campanhas','Conteúdo','DVDs','Transmissões','Motion'];
 
 // Marquee (esc vem de supabase-config.js)
 function renderMarquee(items){
