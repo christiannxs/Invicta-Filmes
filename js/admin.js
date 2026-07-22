@@ -6,7 +6,7 @@ if (typeof supabase === 'undefined') {
 }
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const CATS = ['Clipe musical','DVD / Show','Institucional','Documentário','Publicitário','Social media'];
+const CATS = ['Clipe musical','DVD / Show','After movie','Publicitário','Transmissões'];
 
 /* Estrutura da aba "Textos & Contatos" — cada campo vira uma chave em site_settings */
 const TEXT_SECTIONS = [
